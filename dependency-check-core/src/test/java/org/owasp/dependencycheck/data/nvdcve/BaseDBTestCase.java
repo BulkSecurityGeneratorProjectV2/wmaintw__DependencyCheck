@@ -17,11 +17,7 @@
  */
 package org.owasp.dependencycheck.data.nvdcve;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.junit.Before;
@@ -72,6 +68,9 @@ public abstract class BaseDBTestCase extends BaseTest {
                     BufferedOutputStream dest = null;
                     try {
                         File o = new File(dataPath, entry.getName());
+                        if (!o.toPath().normalize().startsWith(dataPath.toPath().normalize())) {
+                            throw new IOException("Bad zip entry");
+                        }
                         o.createNewFile();
                         fos = new FileOutputStream(o, false);
                         dest = new BufferedOutputStream(fos, BUFFER_SIZE);

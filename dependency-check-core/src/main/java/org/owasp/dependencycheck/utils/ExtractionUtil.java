@@ -107,6 +107,9 @@ public final class ExtractionUtil {
                     }
                 } else {
                     final File file = new File(extractTo, entry.getName());
+                    if (!file.toPath().normalize().startsWith(extractTo.toPath().normalize())) {
+                        throw new RuntimeException("Bad zip entry");
+                    }
                     if (engine == null || engine.accept(file)) {
                         BufferedOutputStream bos = null;
                         FileOutputStream fos;
