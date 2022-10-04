@@ -23,6 +23,8 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.nio.file.Files;
+
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.input.AutoCloseInputStream;
@@ -234,19 +236,7 @@ public class PythonDistributionAnalyzer extends AbstractFileTypeAnalyzer {
     @Override
     protected void initializeFileTypeAnalyzer() throws Exception {
         final File baseDir = Settings.getTempDirectory();
-        tempFileLocation = File.createTempFile("check", "tmp", baseDir);
-        if (!tempFileLocation.delete()) {
-            final String msg = String.format(
-                    "Unable to delete temporary file '%s'.",
-                    tempFileLocation.getAbsolutePath());
-            throw new AnalysisException(msg);
-        }
-        if (!tempFileLocation.mkdirs()) {
-            final String msg = String.format(
-                    "Unable to create directory '%s'.",
-                    tempFileLocation.getAbsolutePath());
-            throw new AnalysisException(msg);
-        }
+        tempFileLocation = Files.createTempDirectory(baseDir.toPath(), "check" + "tmp").toFile();
     }
 
     /**

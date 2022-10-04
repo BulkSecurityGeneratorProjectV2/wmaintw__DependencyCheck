@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -163,15 +164,7 @@ public class ArchiveAnalyzer extends AbstractFileTypeAnalyzer {
     @Override
     public void initializeFileTypeAnalyzer() throws Exception {
         final File baseDir = Settings.getTempDirectory();
-        tempFileLocation = File.createTempFile("check", "tmp", baseDir);
-        if (!tempFileLocation.delete()) {
-            final String msg = String.format("Unable to delete temporary file '%s'.", tempFileLocation.getAbsolutePath());
-            throw new AnalysisException(msg);
-        }
-        if (!tempFileLocation.mkdirs()) {
-            final String msg = String.format("Unable to create directory '%s'.", tempFileLocation.getAbsolutePath());
-            throw new AnalysisException(msg);
-        }
+        tempFileLocation = Files.createTempDirectory(baseDir.toPath(), "check" + "tmp").toFile();
     }
 
     /**
